@@ -1,0 +1,40 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="GoogleTasksManager.GUI.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    shell:SystemTray.IsVisible="True">
+
+    <ScrollViewer>
+        <StackPanel>
+            <Button Command="{Binding UpdateTaskListsCommand}"
+                Content="Sync"/>
+            <ListBox Name="taskLists" ItemsSource="{Binding TaskLists}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding DisplayTasksForTaskListCommand}"
+                                           CommandParameter="{Binding ElementName=taskLists, Path=SelectedItem}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" FontSize="40"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBoxItem>
+                    <TextBlock Text="lorem ipsum" FontSize="40"/>
+                </ListBoxItem>
+            </ListBox>
+        </StackPanel>
+    </ScrollViewer>
+
+</phone:PhoneApplicationPage>
