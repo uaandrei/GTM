@@ -16,13 +16,13 @@
 
     <ScrollViewer>
         <StackPanel>
-            <Button Command="{Binding UpdateTaskListsCommand}"
-                Content="Sync"/>
+            <Button Command="{Binding SyncTaskListsCommand}"
+                    Content="Sync"/>
             <ListBox Name="taskLists" ItemsSource="{Binding TaskLists}">
                 <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectionChanged">
+                    <i:EventTrigger EventName="Tap">
                         <i:InvokeCommandAction Command="{Binding DisplayTasksForTaskListCommand}"
-                                           CommandParameter="{Binding ElementName=taskLists, Path=SelectedItem}"/>
+                                               CommandParameter="{Binding ElementName=taskLists, Path=SelectedItem}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <ListBox.ItemTemplate>

@@ -14,42 +14,49 @@ namespace GoogleTasksService
 {
     public class GoogleTaskService
     {
-        private TasksService _service;
+        private const string User = "user";
+        private CancellationToken CancellationToken = CancellationToken.None;
+        private IEnumerable<string> _scopes;
 
         public GoogleTaskService()
         {
-            Initialize();
+            _scopes = new[] { TasksService.Scope.Tasks };
         }
 
-        private async void Initialize()
+        private async Task<TasksService> GetTaskService()
         {
-            var credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
-                new FileStream("client_secret.json", FileMode.Open, FileAccess.Read),
-                new[] { TasksService.Scope.Tasks },
-                "user",
-                CancellationToken.None);
-            _service = new TasksService(new BaseClientService.Initializer
+            using (var secretStream = new FileStream("client_secret.json", FileMode.Open, FileAccess.Read))
             {
-                HttpClientInitializer = credential,
-                ApplicationName = "GTM"
-            });
+                var credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                    secretStream,
+                    _scopes,
+                    User,
+                    CancellationToken);
+
+                return new TasksService(new BaseClientService.Initializer
+                {
+                    HttpClientInitializer = credential,
+                    ApplicationName = "GTM"
+                });
+            }
         }
 
         public async Task<List<TaskList>> GetTaskLists()
         {
-            var taskLists = await _service.Tasklists.List().ExecuteAsync();
-            return taskLists.Items.Select(TaskListAdapter.ToModelTaskList).ToList();
+            using (var service = await GetTaskService())
+            {
+                var taskLists = await service.Tasklists.List().ExecuteAsync();
+                return taskLists.Items.Select(TaskListAdapter.ToModelTaskList).ToList();
+            }
         }
 
         public async Task<List<ModelTask>> GetTasksForTaskList(TaskList taskList)
         {
-            var tasks = await _service.Tasks.List(taskList.Id).ExecuteAsync();
-            return tasks.Items.Select(TaskAdapter.ToModelTask).ToList();
-        }
-
-        ~GoogleTaskService()
-        {
-            _service.Dispose();
+            using (var service = await GetTaskService())
+            {
+                var tasks = await service.Tasks.List(taskList.Id).ExecuteAsync();
+                return tasks.Items.Select(TaskAdapter.ToModelTask).ToList();
+            }
         }
     }
 }

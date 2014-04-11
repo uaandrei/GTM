@@ -16,11 +16,15 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="{Binding TaskListName}" HorizontalAlignment="Center"
+        <Button Grid.Row="0" 
+                Command="{Binding SyncTasksCommand}"
+                Content="Sync"/>
+        <TextBlock Grid.Row="1" Text="{Binding TaskListName}" HorizontalAlignment="Center"
                    FontSize="44"/>
-        <ListBox Grid.Row="1" ItemsSource="{Binding Tasks}" Height="Auto">
+        <ListBox Grid.Row="2" ItemsSource="{Binding Tasks}" Height="Auto">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">

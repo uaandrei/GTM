@@ -23,9 +23,8 @@ namespace GoogleTasksManager.GUI.Views
         {
             base.OnNavigatedTo(e);
 
-            var tasks = (PhoneApplicationService.Current.State["tasks"] as List<Task>);
-            var taskListName = NavigationContext.QueryString["taskListName"];
-            DataContext = new TasksViewModel(tasks, taskListName);
+            var taskListId = NavigationContext.QueryString["taskListId"];
+            DataContext = new TasksViewModel(taskListId);
         }
     }
 }

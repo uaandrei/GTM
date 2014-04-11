@@ -1,12 +1,12 @@
-﻿using System;
+﻿using GoogleTasksManager.GUI.Resources;
+using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
+using System;
 using System.Diagnostics;
-using System.Resources;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Navigation;
-using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
-using GoogleTasksManager.GUI.Resources;
+using Tasks.Persistence;
 
 namespace GoogleTasksManager.GUI
 {
@@ -79,6 +79,8 @@ namespace GoogleTasksManager.GUI
         // This code will not execute when the application is deactivated
         private void Application_Closing(object sender, ClosingEventArgs e)
         {
+            // TODO: Read from local db!
+            //TaskContainer.Save();
         }
 
         // Code to execute if a navigation fails

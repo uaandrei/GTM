@@ -1,52 +1,56 @@
 ﻿using GoogleTasksService;
+using Microsoft.Phone.Net.NetworkInformation;
 using Microsoft.Phone.Shell;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using System.Windows.Navigation;
 using Tasks.Model;
+using Tasks.Persistence;
 
 namespace GoogleTasksManager.GUI.ViewModels
 {
     internal class TaskListsViewModel : BaseViewModel
     {
-        private GoogleTaskService _googleTaskService;
-
         public ObservableCollection<TaskList> TaskLists { get; set; }
 
         public ICommand DisplayTasksForTaskListCommand { get; set; }
 
-        public ICommand UpdateTaskListsCommand { get; set; }
+        public ICommand SyncTaskListsCommand { get; set; }
 
         public TaskListsViewModel()
         {
-            _googleTaskService = new GoogleTaskService();
             TaskLists = new ObservableCollection<TaskList>();
-            UpdateTaskListsCommand = new SimpleCommand(FetchAllTaskLists);
-            DisplayTasksForTaskListCommand = new SimpleCommand(FetchAndDisplayAllTasksForTaskList, CanFetchAllTasksForTaskList);
+            SyncTaskListsCommand = new SimpleCommand(SyncTaskLists, CanSyncTaskLists);
+            DisplayTasksForTaskListCommand = new SimpleCommand(DisplayTasksForTaskList, IsTaskListSelected);
+            TaskContainer.GetAllTaskLists().ForEach(p => TaskLists.Add(p));
         }
 
-        private bool CanFetchAllTasksForTaskList(object param)
+        private bool CanSyncTaskLists(object arg)
+        {
+            return NetworkInterface.NetworkInterfaceType != NetworkInterfaceType.None;
+        }
+
+        private bool IsTaskListSelected(object param)
         {
             return param != null;
         }
 
-        private async void FetchAndDisplayAllTasksForTaskList(object param)
+        private async void DisplayTasksForTaskList(object param)
         {
             var taskList = (TaskList)param;
-            var tasks = await _googleTaskService.GetTasksForTaskList(taskList);
-            PhoneApplicationService.Current.State["tasks"] = tasks;
-            App.RootFrame.Navigate(new Uri("/Views/TasksView.xaml?taskListName=" + taskList.Name, UriKind.Relative));
+            App.RootFrame.Navigate(new Uri("/Views/TasksView.xaml?taskListId=" + taskList.Id, UriKind.Relative));
         }
 
-        private async void FetchAllTaskLists(object obj)
+        private async void SyncTaskLists(object obj)
         {
-            ClearTasks();
-            var taskLists = await _googleTaskService.GetTaskLists();
+            ClearTaskLists();
+            var taskLists = await GoogleTaskService.GetTaskLists();
             taskLists.ForEach(p => TaskLists.Add(p));
+            TaskContainer.SyncTaskLists(taskLists);
         }
 
-        private void ClearTasks()
+        private void ClearTaskLists()
         {
             TaskLists.Clear();
         }

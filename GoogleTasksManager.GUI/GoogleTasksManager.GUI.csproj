@@ -171,6 +171,10 @@
       <Project>{0C4B4D3E-60D0-4293-BDB1-C274D1D4F3EF}</Project>
       <Name>Tasks.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Tasks.Persistence\Tasks.Persistence.csproj">
+      <Project>{088E212B-E8F5-412D-94D2-D9F6839C49D4}</Project>
+      <Name>Tasks.Persistence</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Google.Apis, Version=1.8.1.31687, Culture=neutral, processorArchitecture=MSIL">
