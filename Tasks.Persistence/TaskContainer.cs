@@ -12,20 +12,51 @@ namespace Tasks.Persistence
             TaskDataContext.Initialize();
         }
 
+        public void AddUpdateTaskList(TaskList taskList)
+        {
+            using (var context = GetContext())
+            {
+                var existingTaskList = context.TaskLists.FirstOrDefault(p => p.Uid == taskList.Id);
+                if (existingTaskList == null)
+                {
+                    context.TaskLists.InsertOnSubmit(TaskListAdapter.ToDbTaskList(taskList));
+                }
+                else
+                {
+                    existingTaskList.Name = taskList.Name;
+                }
+                context.SubmitChanges();
+            }
+        }
+
+        public void AddUpdateTask(Task task, string taskListId)
+        {
+            using (var context = GetContext())
+            {
+                var taskList = context.TaskLists.First(p => p.Uid == taskListId);
+                var existingTask = context.Tasks.FirstOrDefault(p => p.Uid == task.Id);
+                if (existingTask == null)
+                {
+                    var dbTaskToInsert = TaskAdapter.ToDbTask(task);
+                    dbTaskToInsert.TaskListId = taskList.Id;
+                    context.Tasks.InsertOnSubmit(dbTaskToInsert);
+                }
+                else
+                {
+                    existingTask.Description = task.Description;
+                    existingTask.Due = task.Due;
+                    existingTask.IsDone = task.IsDone;
+                    existingTask.Title = task.Title;
+                }
+                context.SubmitChanges();
+            }
+        }
+
         public List<TaskList> GetAllTaskLists()
         {
             using (var context = GetContext())
             {
                 return context.TaskLists.Select(TaskListAdapter.ToTaskList).ToList();
-            }
-        }
-
-        public void Save(TaskList tasklist)
-        {
-            using (var context = GetContext())
-            {
-                context.TaskLists.InsertOnSubmit(TaskListAdapter.ToDbTaskList(tasklist));
-                context.SubmitChanges();
             }
         }
 
@@ -35,52 +66,6 @@ namespace Tasks.Persistence
             {
                 var taskList = context.TaskLists.First(p => p.Uid == taskListId);
                 return context.Tasks.Where(p => p.TaskListId == taskList.Id).Select(TaskAdapter.ToTask).ToList();
-            }
-        }
-
-        public void SyncTaskLists(IList<TaskList> taskLists)
-        {
-            using (var context = GetContext())
-            {
-                foreach (var taskList in taskLists)
-                {
-                    var existingTaskList = context.TaskLists.FirstOrDefault(p => p.Uid == taskList.Id);
-                    if (existingTaskList == null)
-                    {
-                        context.TaskLists.InsertOnSubmit(TaskListAdapter.ToDbTaskList(taskList));
-                    }
-                    else
-                    {
-                        existingTaskList.Name = taskList.Name;
-                    }
-                }
-                context.SubmitChanges();
-            }
-        }
-
-        public void SyncTasksWithTaskList(List<Task> tasks, string taskListId)
-        {
-            using (var context = GetContext())
-            {
-                var taskList = context.TaskLists.First(p => p.Uid == taskListId);
-                foreach (var task in tasks)
-                {
-                    var existingTask = context.Tasks.FirstOrDefault(p => p.Uid == task.Id);
-                    if (existingTask == null)
-                    {
-                        var dbTaskToInsert = TaskAdapter.ToDbTask(task);
-                        dbTaskToInsert.TaskListId = taskList.Id;
-                        context.Tasks.InsertOnSubmit(dbTaskToInsert);
-                    }
-                    else
-                    {
-                        existingTask.Description = task.Description;
-                        existingTask.Due = task.Due;
-                        existingTask.IsDone = task.IsDone;
-                        existingTask.Title = task.Title;
-                    }
-                }
-                context.SubmitChanges();
             }
         }
 

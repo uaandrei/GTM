@@ -79,8 +79,6 @@ namespace GoogleTasksManager.GUI
         // This code will not execute when the application is deactivated
         private void Application_Closing(object sender, ClosingEventArgs e)
         {
-            // TODO: Read from local db!
-            //TaskContainer.Save();
         }
 
         // Code to execute if a navigation fails

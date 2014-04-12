@@ -16,7 +16,7 @@
 
     <ScrollViewer>
         <StackPanel>
-            <Button Command="{Binding SyncTaskListsCommand}"
+            <Button Command="{Binding SyncWithGoogleCommand}"
                     Content="Sync"/>
             <ListBox Name="taskLists" ItemsSource="{Binding TaskLists}">
                 <i:Interaction.Triggers>
