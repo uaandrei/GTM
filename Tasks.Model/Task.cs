@@ -4,7 +4,8 @@ namespace Tasks.Model
 {
     public class Task
     {
-        public string Id { get; set; }
+        public int DbId { get; set; }
+        public string GoogleId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public bool IsDone { get; set; }
@@ -12,11 +13,16 @@ namespace Tasks.Model
 
         public Task(string id, string title, string description, bool isDone, DateTime? due)
         {
-            Id = id;
+            GoogleId = id;
             Title = title;
             Description = description;
             IsDone = isDone;
             Due = due;
+        }
+        
+        public Task()
+        {
+                
         }
     }
 }

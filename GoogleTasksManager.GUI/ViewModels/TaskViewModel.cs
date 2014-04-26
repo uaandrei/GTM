@@ -5,6 +5,7 @@ namespace GoogleTasksManager.GUI.ViewModels
     internal class TaskViewModel : BaseViewModel
     {
         private Task _task;
+        private string _taskListId;
 
         public string Title
         {
@@ -34,21 +35,33 @@ namespace GoogleTasksManager.GUI.ViewModels
 
         public ICommand SaveTaskCommand { get; set; }
 
-        public TaskViewModel(string taskId)
+        #region ctor
+
+        public TaskViewModel(string taskId, string taskListId)
         {
+            _taskListId = taskListId;
             _task = TaskContainer.GetTask(taskId);
-            SaveTaskCommand = new SimpleCommand(SaveTask, CanSaveTask);
+            Initialize();
         }
+
+        public TaskViewModel(string taskListId)
+        {
+            _taskListId = taskListId;
+            _task = new Task();
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            SaveTaskCommand = new SimpleCommand(SaveTask);
+        }
+
+        #endregion
 
         private void SaveTask(object obj)
         {
-            TaskContainer.SaveTask(_task);
+            TaskContainer.SaveTask(_task, _taskListId);
             App.RootFrame.GoBack();
-        }
-
-        private bool CanSaveTask(object arg)
-        {
-            return !string.IsNullOrWhiteSpace(Title);
         }
     }
 }

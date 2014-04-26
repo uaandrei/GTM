@@ -12,11 +12,11 @@ namespace Tasks.Persistence
             TaskDataContext.Initialize();
         }
 
-        public void AddUpdateTaskList(TaskList taskList)
+        public void SaveTaskList(TaskList taskList)
         {
             using (var context = GetContext())
             {
-                var existingTaskList = context.TaskLists.FirstOrDefault(p => p.Uid == taskList.Id);
+                var existingTaskList = context.TaskLists.FirstOrDefault(p => p.Uid == taskList.GoogleId);
                 if (existingTaskList == null)
                 {
                     context.TaskLists.InsertOnSubmit(TaskListAdapter.ToDbTaskList(taskList));
@@ -29,12 +29,12 @@ namespace Tasks.Persistence
             }
         }
 
-        public void AddUpdateTask(Task task, string taskListId)
+        public void SaveTask(Task task, string taskListId)
         {
             using (var context = GetContext())
             {
                 var taskList = context.TaskLists.First(p => p.Uid == taskListId);
-                var existingTask = context.Tasks.FirstOrDefault(p => p.Uid == task.Id);
+                var existingTask = context.Tasks.FirstOrDefault(p => p.Uid == task.GoogleId);
                 if (existingTask == null)
                 {
                     var dbTaskToInsert = TaskAdapter.ToDbTask(task);
@@ -90,20 +90,12 @@ namespace Tasks.Persistence
             return new TaskDataContext(TaskDataContext.DBConnectionString);
         }
 
-        public void SaveTask(Task task)
+        public void UpdateGoogleIdForTask(Task task, string newGoogleId)
         {
             using (var context = GetContext())
             {
-                var existingTask = context.Tasks.FirstOrDefault(p => p.Uid == task.Id);
-                if (existingTask == null)
-                {
-                    context.Tasks.InsertOnSubmit(TaskAdapter.ToDbTask(task));
-                }
-                else
-                {
-                    existingTask.Title = task.Title;
-                    existingTask.Description = task.Description;
-                }
+                var dbTask = context.Tasks.First(p => p.Id == task.DbId);
+                dbTask.Uid = newGoogleId;
                 context.SubmitChanges();
             }
         }

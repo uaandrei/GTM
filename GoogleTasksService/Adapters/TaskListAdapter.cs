@@ -14,7 +14,7 @@ namespace GoogleTasksService.Adapters
         {
             return new GoogleTaskList
             {
-                Id = taskList.Id,
+                Id = taskList.GoogleId,
                 Title = taskList.Name
             };
         }

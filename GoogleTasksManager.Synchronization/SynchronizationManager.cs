@@ -8,18 +8,38 @@ namespace GoogleTasksManager.Synchronization
     {
         public static async Task SyncWithGoogle(this TaskContainer taskContainer)
         {
+            await SyncFromGoogle(taskContainer);
+            await SyncToGoogle(taskContainer);
+        }
+
+        private static async Task SyncToGoogle(TaskContainer taskContainer)
+        {
             var service = new GoogleTaskService();
-            var taskLists = await service.GetTaskLists();
-            foreach (var taskList in taskLists)
+            foreach (var taskList in taskContainer.GetAllTaskLists())
             {
-                taskContainer.AddUpdateTaskList(taskList);
-                var tasks = await service.GetTasksForTaskList(taskList);
-                foreach (var task in tasks)
+                foreach (var task in taskContainer.GetTasksForTaskList(taskList.GoogleId))
                 {
-                    taskContainer.AddUpdateTask(task, taskList.Id);
+                    if (string.IsNullOrEmpty(task.GoogleId))
+                    {
+                        var addedTask = await service.AddTaskToTaskList(task, taskList);
+                        taskContainer.UpdateGoogleIdForTask(task, addedTask.GoogleId);
+                    }
                 }
             }
-            // Sync ones that were add from app. new => uid = ""
+        }
+
+        private static async Task SyncFromGoogle(TaskContainer taskContainer)
+        {
+
+            var service = new GoogleTaskService();
+            foreach (var taskList in await service.GetTaskLists())
+            {
+                taskContainer.SaveTaskList(taskList);
+                foreach (var task in await service.GetTasksForTaskList(taskList))
+                {
+                    taskContainer.SaveTask(task, taskList.GoogleId);
+                }
+            }
         }
     }
 }

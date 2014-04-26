@@ -6,12 +6,14 @@ namespace Tasks.Model
     {
         public string Name { get; set; }
 
-        public string Id { get; set; }
+        public string GoogleId { get; set; }
+
+        public int DbId { get; set; }
 
         public TaskList(string name, string id)
         {
             Name = name;
-            Id = id;
+            GoogleId = id;
         }
     }
 }

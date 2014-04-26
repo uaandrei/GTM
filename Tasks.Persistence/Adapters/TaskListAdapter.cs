@@ -14,13 +14,16 @@ namespace Tasks.Persistence.Adapters
             return new DbTaskList
             {
                 Name = tasklist.Name,
-                Uid = tasklist.Id
+                Uid = tasklist.GoogleId
             };
         }
 
         public static TaskList ToTaskList(DbTaskList tasklist)
         {
-            return new TaskList(tasklist.Name, tasklist.Uid);
+            return new TaskList(tasklist.Name, tasklist.Uid)
+            {
+                DbId = tasklist.Id
+            };
         }
     }
 }

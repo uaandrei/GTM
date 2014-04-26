@@ -23,8 +23,20 @@ namespace GoogleTasksManager.GUI.Views
         {
             base.OnNavigatedTo(e);
 
-            var taskId = NavigationContext.QueryString["taskId"];
-            DataContext = new TaskViewModel(taskId);
+            TaskViewModel context;
+
+            var taskListId = NavigationContext.QueryString["taskListId"];
+            if (NavigationContext.QueryString.ContainsKey("taskId"))
+            {
+                var taskId = NavigationContext.QueryString["taskId"];
+                context = new TaskViewModel(taskId, taskListId);
+            }
+            else
+            {
+                context = new TaskViewModel(taskListId);
+            }
+
+            DataContext = context;
         }
     }
 }

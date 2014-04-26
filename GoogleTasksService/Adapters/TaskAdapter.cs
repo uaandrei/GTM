@@ -15,7 +15,7 @@ namespace GoogleTasksService.Adapters
         {
             return new GoogleTask
             {
-                Id = task.Id,
+                Id = task.GoogleId,
                 Title = task.Title,
                 Notes = task.Description,
                 Status = task.IsDone ? GoogleApiConstants.CompletedStatus : GoogleApiConstants.NeedsActionStatus,

@@ -11,6 +11,7 @@ namespace GoogleTasksManager.GUI.ViewModels
 
         public ObservableCollection<Task> Tasks { get; set; }
         public ICommand EditTaskCommand { get; set; }
+        public ICommand NewTaskCommand { get; set; }
 
         public string TaskListName
         {
@@ -20,15 +21,21 @@ namespace GoogleTasksManager.GUI.ViewModels
         public TasksViewModel(string taskListId)
         {
             EditTaskCommand = new SimpleCommand(EditTask);
+            NewTaskCommand = new SimpleCommand(NewTask);
             Tasks = new ObservableCollection<Task>();
             TaskContainer.GetTasksForTaskList(taskListId).ForEach(p => Tasks.Add(p));
             _taskList = TaskContainer.GetTaskList(taskListId);
         }
 
+        private void NewTask(object obj)
+        {
+            App.RootFrame.Navigate(new Uri(string.Format("/Views/TaskView.xaml?taskListId={0}", _taskList.GoogleId), UriKind.Relative));
+        }
+
         private void EditTask(object obj)
         {
             var task = (Task)obj;
-            App.RootFrame.Navigate(new Uri("/Views/TaskView.xaml?taskId=" + task.Id, UriKind.Relative));
+            App.RootFrame.Navigate(new Uri(string.Format("/Views/TaskView.xaml?taskListId={0}&taskId=", _taskList.GoogleId, task.GoogleId), UriKind.Relative));
         }
     }
 }

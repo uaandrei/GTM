@@ -54,8 +54,17 @@ namespace GoogleTasksService
         {
             using (var service = await GetTaskService())
             {
-                var tasks = await service.Tasks.List(taskList.Id).ExecuteAsync();
+                var tasks = await service.Tasks.List(taskList.GoogleId).ExecuteAsync();
                 return tasks.Items.Select(TaskAdapter.ToModelTask).ToList();
+            }
+        }
+
+        public async Task<ModelTask> AddTaskToTaskList(ModelTask task, TaskList taskList)
+        {
+            using (var service = await GetTaskService())
+            {
+                var addedTask = await service.Tasks.Insert(TaskAdapter.ToGoogleTask(task), taskList.GoogleId).ExecuteAsync();
+                return TaskAdapter.ToModelTask(addedTask);
             }
         }
     }
