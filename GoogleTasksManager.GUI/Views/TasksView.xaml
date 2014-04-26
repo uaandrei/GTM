@@ -6,6 +6,7 @@
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
@@ -21,7 +22,13 @@
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="1" Text="{Binding TaskListName}" HorizontalAlignment="Center"
                    FontSize="44"/>
-        <ListBox Grid.Row="2" ItemsSource="{Binding Tasks}" Height="Auto">
+        <ListBox Grid.Row="2" ItemsSource="{Binding Tasks}" Height="Auto" Name="tasks">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Tap">
+                    <i:InvokeCommandAction Command="{Binding EditTaskCommand}"
+                                           CommandParameter="{Binding ElementName=tasks, Path=SelectedItem}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">

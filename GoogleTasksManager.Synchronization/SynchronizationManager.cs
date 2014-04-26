@@ -19,6 +19,7 @@ namespace GoogleTasksManager.Synchronization
                     taskContainer.AddUpdateTask(task, taskList.Id);
                 }
             }
+            // Sync ones that were add from app. new => uid = ""
         }
     }
 }

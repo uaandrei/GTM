@@ -69,6 +69,14 @@ namespace Tasks.Persistence
             }
         }
 
+        public Task GetTask(string taskId)
+        {
+            using (var context = GetContext())
+            {
+                return TaskAdapter.ToTask(context.Tasks.First(p => p.Uid == taskId));
+            }
+        }
+
         public TaskList GetTaskList(string taskListId)
         {
             using (var context = GetContext())
@@ -80,6 +88,24 @@ namespace Tasks.Persistence
         private TaskDataContext GetContext()
         {
             return new TaskDataContext(TaskDataContext.DBConnectionString);
+        }
+
+        public void SaveTask(Task task)
+        {
+            using (var context = GetContext())
+            {
+                var existingTask = context.Tasks.FirstOrDefault(p => p.Uid == task.Id);
+                if (existingTask == null)
+                {
+                    context.Tasks.InsertOnSubmit(TaskAdapter.ToDbTask(task));
+                }
+                else
+                {
+                    existingTask.Title = task.Title;
+                    existingTask.Description = task.Description;
+                }
+                context.SubmitChanges();
+            }
         }
     }
 }

@@ -1,14 +1,16 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 using Tasks.Model;
 
 namespace GoogleTasksManager.GUI.ViewModels
 {
     internal class TasksViewModel : BaseViewModel
     {
-        private string _taskListName;
         private TaskList _taskList;
 
         public ObservableCollection<Task> Tasks { get; set; }
+        public ICommand EditTaskCommand { get; set; }
 
         public string TaskListName
         {
@@ -17,9 +19,16 @@ namespace GoogleTasksManager.GUI.ViewModels
 
         public TasksViewModel(string taskListId)
         {
+            EditTaskCommand = new SimpleCommand(EditTask);
             Tasks = new ObservableCollection<Task>();
             TaskContainer.GetTasksForTaskList(taskListId).ForEach(p => Tasks.Add(p));
             _taskList = TaskContainer.GetTaskList(taskListId);
+        }
+
+        private void EditTask(object obj)
+        {
+            var task = (Task)obj;
+            App.RootFrame.Navigate(new Uri("/Views/TaskView.xaml?taskId=" + task.Id, UriKind.Relative));
         }
     }
 }
