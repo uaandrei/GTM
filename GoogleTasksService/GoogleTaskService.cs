@@ -2,6 +2,7 @@
 using Google.Apis.Services;
 using Google.Apis.Tasks.v1;
 using GoogleTasksService.Adapters;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -52,10 +53,17 @@ namespace GoogleTasksService
 
         public async Task<List<ModelTask>> GetTasksForTaskList(TaskList taskList)
         {
-            using (var service = await GetTaskService())
+            try
             {
-                var tasks = await service.Tasks.List(taskList.GoogleId).ExecuteAsync();
-                return tasks.Items.Select(TaskAdapter.ToModelTask).ToList();
+                using (var service = await GetTaskService())
+                {
+                    var tasks = await service.Tasks.List(taskList.GoogleId).ExecuteAsync();
+                    return tasks.Items.Select(TaskAdapter.ToModelTask).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                return new List<ModelTask>();
             }
         }
 
