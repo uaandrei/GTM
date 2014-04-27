@@ -22,7 +22,6 @@ namespace GoogleTasksManager.GUI.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
             TaskViewModel context;
 
             var taskListId = NavigationContext.QueryString["taskListId"];

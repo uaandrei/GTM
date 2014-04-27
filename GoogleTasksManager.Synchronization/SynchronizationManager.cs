@@ -30,7 +30,6 @@ namespace GoogleTasksManager.Synchronization
 
         private static async Task SyncFromGoogle(TaskContainer taskContainer)
         {
-
             var service = new GoogleTaskService();
             foreach (var taskList in await service.GetTaskLists())
             {

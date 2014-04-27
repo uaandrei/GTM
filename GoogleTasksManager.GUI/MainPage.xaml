@@ -7,17 +7,23 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    xmlns:local="clr-namespace:GoogleTasksManager.GUI" 
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     shell:SystemTray.IsVisible="True">
-
+    
+    <phone:PhoneApplicationPage.Resources>
+        <local:BooleanToVisibilityConverter x:Key="boolToVisibilityConverter" />
+    </phone:PhoneApplicationPage.Resources>
+    
     <ScrollViewer>
         <StackPanel>
             <Button Command="{Binding SyncWithGoogleCommand}"
                     Content="Sync"/>
+            <ProgressBar Visibility="{Binding IsLoading, Converter={StaticResource boolToVisibilityConverter}}" IsIndeterminate="True"/>
             <ListBox Name="taskLists" ItemsSource="{Binding TaskLists}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Tap">

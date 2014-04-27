@@ -10,6 +10,21 @@ namespace GoogleTasksManager.GUI.ViewModels
 {
     internal class TaskListsViewModel : BaseViewModel
     {
+        private bool _isLoading;
+
+        public bool IsLoading
+        {
+            get
+            {
+                return _isLoading;
+            }
+            set
+            {
+                _isLoading = value;
+                NotifyPropertyChanged("IsLoading");
+            }
+        }
+
         public ObservableCollection<TaskList> TaskLists { get; set; }
 
         public ICommand DisplayTasksForTaskListCommand { get; set; }
@@ -21,13 +36,16 @@ namespace GoogleTasksManager.GUI.ViewModels
             SyncWithGoogleCommand = new SimpleCommand(SyncWithGoogle, CanSyncWithGoogle);
             DisplayTasksForTaskListCommand = new SimpleCommand(DisplayTasksForTaskList, IsTaskListSelected);
             RefreshTaskLists();
+            IsLoading = false;
         }
 
         private async void SyncWithGoogle(object obj)
         {
+            IsLoading = true;
             ClearTaskLists();
             await TaskContainer.SyncWithGoogle();
             RefreshTaskLists();
+            IsLoading = false;
         }
 
         private bool CanSyncWithGoogle(object arg)

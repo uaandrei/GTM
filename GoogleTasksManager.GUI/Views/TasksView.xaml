@@ -20,11 +20,19 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <TextBlock  Text="{Binding TaskListName}" HorizontalAlignment="Center"
-                        FontSize="44"/>
-            <Button Command="{Binding NewTaskCommand}" Width="Auto" Content="+"/>
-        </StackPanel>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" 
+                       HorizontalAlignment="Left"
+                       Text="{Binding TaskListName}" 
+                       FontSize="44"/>
+            <Button Grid.Column="1"
+                    Content="+" 
+                    Command="{Binding NewTaskCommand}" />
+        </Grid>
         <ListBox Grid.Row="2" ItemsSource="{Binding Tasks}" Height="Auto" Name="tasks">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Tap">
