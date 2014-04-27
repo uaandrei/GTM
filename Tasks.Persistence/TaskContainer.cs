@@ -158,5 +158,15 @@ namespace Tasks.Persistence
                 context.SubmitChanges();
             }
         }
+
+        public void DeleteTask(int id)
+        {
+            using (var context = GetContext())
+            {
+                var dbTask = context.Tasks.First(p => p.Id == id);
+                context.Tasks.DeleteOnSubmit(dbTask);
+                context.SubmitChanges();
+            }
+        }
     }
 }
