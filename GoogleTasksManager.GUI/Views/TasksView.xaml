@@ -52,9 +52,9 @@
                        Text="{Binding TaskListName}" 
                        FontSize="44"/>
             <Button Grid.Column="1"
+                    Content="+" FontSize="30"
                     Background="Transparent"
                     Command="{Binding NewTaskCommand}">
-                <Image Source="Toolkit.Content/ApplicationBar.Add.png" Stretch="Fill" Width="30" Height="30"/>
             </Button>
         </Grid>
         <ListBox Grid.Row="2" ItemsSource="{Binding Tasks}" Height="Auto" Name="tasks">

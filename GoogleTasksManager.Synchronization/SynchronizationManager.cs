@@ -17,7 +17,7 @@ namespace GoogleTasksManager.Synchronization
             var service = new GoogleTaskService();
             foreach (var taskList in taskContainer.GetAllTaskLists())
             {
-                foreach (var task in taskContainer.GetTasksForTaskList(taskList.GoogleId))
+                foreach (var task in taskContainer.GetTasksForTaskList(taskList.DbId))
                 {
                     if (string.IsNullOrEmpty(task.GoogleId))
                     {
@@ -36,7 +36,7 @@ namespace GoogleTasksManager.Synchronization
                 taskContainer.SaveTaskList(taskList);
                 foreach (var task in await service.GetTasksForTaskList(taskList))
                 {
-                    taskContainer.SaveTask(task, taskList.GoogleId);
+                    taskContainer.SaveTask(task, taskList.DbId);
                 }
             }
         }

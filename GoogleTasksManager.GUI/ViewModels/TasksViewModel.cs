@@ -18,7 +18,7 @@ namespace GoogleTasksManager.GUI.ViewModels
             get { return _taskList.Name; }
         }
 
-        public TasksViewModel(string taskListId)
+        public TasksViewModel(int taskListId)
         {
             EditTaskCommand = new SimpleCommand(EditTask, CanEditTask);
             NewTaskCommand = new SimpleCommand(NewTask);
@@ -29,7 +29,7 @@ namespace GoogleTasksManager.GUI.ViewModels
 
         private void NewTask(object obj)
         {
-            App.RootFrame.Navigate(new Uri(string.Format("/Views/TaskView.xaml?taskListId={0}", _taskList.GoogleId), UriKind.Relative));
+            App.RootFrame.Navigate(new Uri(string.Format("/Views/TaskView.xaml?taskListId={0}", _taskList.DbId), UriKind.Relative));
         }
 
         private bool CanEditTask(object arg)
@@ -40,7 +40,7 @@ namespace GoogleTasksManager.GUI.ViewModels
         private void EditTask(object obj)
         {
             var task = (Task)obj;
-            App.RootFrame.Navigate(new Uri(string.Format("/Views/TaskView.xaml?taskListId={0}&taskId={1}", _taskList.GoogleId, task.GoogleId), UriKind.Relative));
+            App.RootFrame.Navigate(new Uri(string.Format("/Views/TaskView.xaml?taskListId={0}&taskId={1}", _taskList.DbId, task.DbId), UriKind.Relative));
         }
     }
 }

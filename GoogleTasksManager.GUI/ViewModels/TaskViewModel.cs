@@ -5,7 +5,7 @@ namespace GoogleTasksManager.GUI.ViewModels
     internal class TaskViewModel : BaseViewModel
     {
         private Task _task;
-        private string _taskListId;
+        private int _taskListId;
 
         public string Title
         {
@@ -37,14 +37,14 @@ namespace GoogleTasksManager.GUI.ViewModels
 
         #region ctor
 
-        public TaskViewModel(string taskId, string taskListId)
+        public TaskViewModel(int taskId, int taskListId)
         {
             _taskListId = taskListId;
             _task = TaskContainer.GetTask(taskId);
             Initialize();
         }
 
-        public TaskViewModel(string taskListId)
+        public TaskViewModel(int taskListId)
         {
             _taskListId = taskListId;
             _task = new Task();

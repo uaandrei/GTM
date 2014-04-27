@@ -61,7 +61,7 @@ namespace GoogleTasksManager.GUI.ViewModels
         private void DisplayTasksForTaskList(object param)
         {
             var taskList = (TaskList)param;
-            App.RootFrame.Navigate(new Uri("/Views/TasksView.xaml?taskListId=" + taskList.GoogleId, UriKind.Relative));
+            App.RootFrame.Navigate(new Uri("/Views/TasksView.xaml?taskListId=" + taskList.DbId, UriKind.Relative));
         }
 
         private void ClearTaskLists()
