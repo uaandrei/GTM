@@ -12,7 +12,29 @@
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
-    shell:SystemTray.IsVisible="True">
+    shell:SystemTray.IsVisible="True"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit">
+
+    <toolkit:TransitionService.NavigationInTransition>
+        <toolkit:NavigationInTransition>
+            <toolkit:NavigationInTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardIn"/>
+            </toolkit:NavigationInTransition.Backward>
+            <toolkit:NavigationInTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardIn"/>
+            </toolkit:NavigationInTransition.Forward>
+        </toolkit:NavigationInTransition>
+    </toolkit:TransitionService.NavigationInTransition>
+    <toolkit:TransitionService.NavigationOutTransition>
+        <toolkit:NavigationOutTransition>
+            <toolkit:NavigationOutTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardOut"/>
+            </toolkit:NavigationOutTransition.Backward>
+            <toolkit:NavigationOutTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardOut"/>
+            </toolkit:NavigationOutTransition.Forward>
+        </toolkit:NavigationOutTransition>
+    </toolkit:TransitionService.NavigationOutTransition>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -30,8 +52,10 @@
                        Text="{Binding TaskListName}" 
                        FontSize="44"/>
             <Button Grid.Column="1"
-                    Content="+" 
-                    Command="{Binding NewTaskCommand}" />
+                    Background="Transparent"
+                    Command="{Binding NewTaskCommand}">
+                <Image Source="Toolkit.Content/ApplicationBar.Add.png" Stretch="Fill" Width="30" Height="30"/>
+            </Button>
         </Grid>
         <ListBox Grid.Row="2" ItemsSource="{Binding Tasks}" Height="Auto" Name="tasks">
             <i:Interaction.Triggers>

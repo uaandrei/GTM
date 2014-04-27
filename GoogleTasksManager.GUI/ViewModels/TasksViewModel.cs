@@ -40,7 +40,7 @@ namespace GoogleTasksManager.GUI.ViewModels
         private void EditTask(object obj)
         {
             var task = (Task)obj;
-            App.RootFrame.Navigate(new Uri(string.Format("/Views/TaskView.xaml?taskListId={0}&taskId=", _taskList.GoogleId, task.GoogleId), UriKind.Relative));
+            App.RootFrame.Navigate(new Uri(string.Format("/Views/TaskView.xaml?taskListId={0}&taskId={1}", _taskList.GoogleId, task.GoogleId), UriKind.Relative));
         }
     }
 }
