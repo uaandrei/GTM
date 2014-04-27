@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Tasks.Model;
 using Tasks.Persistence.Adapters;
@@ -72,19 +71,6 @@ namespace Tasks.Persistence
             }
         }
 
-        public void UpdateTask(Task task)
-        {
-            using (var context = GetContext())
-            {
-                var existingTask = context.Tasks.First(p => p.Id == task.DbId);
-                existingTask.Description = task.Description;
-                existingTask.Due = task.Due;
-                existingTask.IsDone = task.IsDone;
-                existingTask.Title = task.Title;
-                context.SubmitChanges();
-            }
-        }
-
         public List<TaskList> GetAllTaskLists()
         {
             using (var context = GetContext())
@@ -117,44 +103,12 @@ namespace Tasks.Persistence
             }
         }
 
-        private TaskDataContext GetContext()
-        {
-            return new TaskDataContext(TaskDataContext.DBConnectionString);
-        }
-
         public void UpdateGoogleIdForTask(Task task, string newGoogleId)
         {
             using (var context = GetContext())
             {
                 var dbTask = context.Tasks.First(p => p.Id == task.DbId);
                 dbTask.Uid = newGoogleId;
-                context.SubmitChanges();
-            }
-        }
-
-        public bool TaskExists(string googleId)
-        {
-            using (var context = GetContext())
-            {
-                return context.Tasks.FirstOrDefault(p => p.Uid == googleId) != null;
-            }
-        }
-
-        public bool TaskExists(int id)
-        {
-            using (var context = GetContext())
-            {
-                return context.Tasks.FirstOrDefault(p => p.Id == id) != null;
-            }
-        }
-
-        public void AddTaskToTaskList(Task task, int taskListDbId)
-        {
-            using (var context = GetContext())
-            {
-                var dbTask = TaskAdapter.ToDbTask(task);
-                dbTask.TaskListId = taskListDbId;
-                context.Tasks.InsertOnSubmit(dbTask);
                 context.SubmitChanges();
             }
         }
@@ -167,6 +121,11 @@ namespace Tasks.Persistence
                 context.Tasks.DeleteOnSubmit(dbTask);
                 context.SubmitChanges();
             }
+        }
+
+        private TaskDataContext GetContext()
+        {
+            return new TaskDataContext(TaskDataContext.DBConnectionString);
         }
     }
 }
