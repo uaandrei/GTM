@@ -20,7 +20,7 @@ namespace GoogleTasksManager.GUI.ViewModels
 
         public TasksViewModel(string taskListId)
         {
-            EditTaskCommand = new SimpleCommand(EditTask);
+            EditTaskCommand = new SimpleCommand(EditTask, CanEditTask);
             NewTaskCommand = new SimpleCommand(NewTask);
             Tasks = new ObservableCollection<Task>();
             TaskContainer.GetTasksForTaskList(taskListId).ForEach(p => Tasks.Add(p));
@@ -30,6 +30,11 @@ namespace GoogleTasksManager.GUI.ViewModels
         private void NewTask(object obj)
         {
             App.RootFrame.Navigate(new Uri(string.Format("/Views/TaskView.xaml?taskListId={0}", _taskList.GoogleId), UriKind.Relative));
+        }
+
+        private bool CanEditTask(object arg)
+        {
+            return arg is Task;
         }
 
         private void EditTask(object obj)
